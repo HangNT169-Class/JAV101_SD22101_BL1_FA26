@@ -73,7 +73,7 @@ public class CategoryRepository {
     // 2. Chua dang ky trong HibernateUtil
     // Invalid column name 'category_code1'. => Ss maping cac class thuoc entiy so vs SQL
     public static void main(String[] args) {
-        System.out.println(new CategoryRepository().getOne(1L));
+        System.out.println(new CategoryRepository().getAll());
     }
 }
 
