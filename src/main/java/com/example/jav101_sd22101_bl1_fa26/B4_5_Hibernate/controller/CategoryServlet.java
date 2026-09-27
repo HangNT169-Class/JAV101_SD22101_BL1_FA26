@@ -1,11 +1,14 @@
 package com.example.jav101_sd22101_bl1_fa26.B4_5_Hibernate.controller;
 
+import com.example.jav101_sd22101_bl1_fa26.B4_5_Hibernate.entity.Category1;
 import com.example.jav101_sd22101_bl1_fa26.B4_5_Hibernate.repository.CategoryRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.IOException;
 
@@ -65,25 +68,61 @@ public class CategoryServlet extends HttpServlet {
         }
     }
 
-    private void addCategory(HttpServletRequest request, HttpServletResponse response) {
+    @SneakyThrows
+    private void addCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Category1 cate = new Category1();
+        // B1: Lay toan bo gia tri cua cac o input jsp
+        // BeanUtil -> mapping toan bo gia tri input - tu dong mapping
+        // MAPPING NAME INPUT TRUNG NAME ENTITY
+        BeanUtils.populate(cate,request.getParameterMap());
+        // B2: Goi add trong cate
+        cateRepo.add(cate);
+        // B3: Quay ve trang hien thi
+        response.sendRedirect("/category/hien-thi");
     }
 
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) {
     }
 
-    private void viewAddCategory(HttpServletRequest request, HttpServletResponse response) {
+    private void viewAddCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/buoi3/add-category.jsp").forward(request, response);
     }
 
     private void searchCategory(HttpServletRequest request, HttpServletResponse response) {
     }
 
-    private void viewUpdateCategory(HttpServletRequest request, HttpServletResponse response) {
+    private void viewUpdateCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // B1: Lay ra gia tri duoc truyen tren duong dan
+        String id = request.getParameter("id");
+        // B2: Lay ra doi tuong detail
+        Category1 cate = cateRepo.getOne(Long.valueOf(id));
+        // B3: Truyen gia tri cate -> jsp
+        request.setAttribute("cate1", cate);
+        // B4: Chuyen trang
+        request.getRequestDispatcher("/buoi3/update-cate.jsp")
+                .forward(request, response);
     }
 
-    private void deleteCategory(HttpServletRequest request, HttpServletResponse response) {
+    private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // B1: Lay ra gia tri duoc truyen tren duong dan
+        String id = request.getParameter("a");
+        Category1 cate = cateRepo.getOne(Long.valueOf(id));
+        // B2: Goi ham xoa trong repo
+        cateRepo.delete(cate);
+        // B3: Chuyen trang - c2 => category/hien-thi
+        response.sendRedirect("/category/hien-thi");
     }
 
-    private void detailCategory(HttpServletRequest request, HttpServletResponse response) {
+    private void detailCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // B1: Lay ra gia tri duoc truyen tren duong dan
+        String id = request.getParameter("id");
+        // B2: Lay ra doi tuong detail
+        Category1 cate = cateRepo.getOne(Long.valueOf(id));
+        // B3: Truyen gia tri cate -> jsp
+        request.setAttribute("cate1", cate);
+        // B4: Chuyen trang
+        request.getRequestDispatcher("/buoi3/detail-cate.jsp")
+                .forward(request, response);
     }
 
     private void hienThiCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -93,6 +132,6 @@ public class CategoryServlet extends HttpServlet {
 //        request.setAttribute("lists1",lists);
         request.setAttribute("listsCate", cateRepo.getAll());
         // chuyen trang
-        request.getRequestDispatcher("/buoi3/categorys.jsp").forward(request,response);
+        request.getRequestDispatcher("/buoi3/categorys.jsp").forward(request, response);
     }
 }

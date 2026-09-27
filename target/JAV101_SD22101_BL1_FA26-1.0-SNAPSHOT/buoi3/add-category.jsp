@@ -4,12 +4,13 @@
     <title>Title</title>
   </head>
   <body>
-    <form action="" method="post">
-      Cate code: <input type="text" name="mssv" />
+    <form action="/category/add" method="post">
+    <%--  De su dung BeanUtils
+    => name input trung name trong entity
+        --%>
+      Cate code: <input type="text" name="categoryCode" />
       <br />
-      Cate name: <input type="text" name="ten" />
-      <br />
-      Tuổi: <input type="text" name="tuoi" />
+      Cate name: <input type="text" name="categoryName1" />
       <br />
       <button type="submit">Add</button>
     </form>
